@@ -1,4 +1,3 @@
-
 import streamlit as st
 import tensorflow as tf
 from PIL import Image
@@ -64,6 +63,12 @@ disease_data = {
         'treatment': 'Treatment for Newcastle disease includes isolating infected birds, consulting a veterinarian, providing supportive care, and maintaining up-to-date vaccinations.',
         'prevention': 'Prevent Newcastle disease through vaccination, biosecurity measures, and monitoring for symptoms.',
         'causes': 'Newcastle disease is caused by contact with infected birds or contamination of the environment with the virus.'
+    },
+    'Healthy': {
+        'medication': [],
+        'treatment': 'No specific medication or treatment required.',
+        'prevention': 'Maintain good hygiene, provide proper nutrition, and monitor the health of the chickens regularly.',
+        'causes': 'Healthy chickens do not exhibit symptoms of diseases.'
     }
 }
 
@@ -102,8 +107,12 @@ def main():
             st.write('**Prevention:**', disease_data[predicted_class]['prevention'])
             st.write('**Causes:**', disease_data[predicted_class]['causes'])
         else:
-            st.warning('The uploaded image does not contain chicken feces. Please upload an image of chicken feces.')
+            if predicted_class is None:
+                st.warning('The model did not recognize any disease from the uploaded image.')
+            else:
+                st.warning('The uploaded image does not contain chicken feces. Please upload an image of chicken feces.')
 
 # Run the app
 if __name__ == '__main__':
     main()
+
