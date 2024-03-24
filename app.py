@@ -3,12 +3,13 @@ import streamlit as st
 import tensorflow as tf
 from PIL import Image
 import numpy as np
+import copy
 
 # Load the model
 @st.cache_data(allow_output_mutation=True)
 def load_model():
     model = tf.keras.models.load_model("./model/mobilenetV2/mobilenetv2.h5", compile=False)
-    return model
+    return copy.deepcopy(model)
 
 # Function to make predictions on the uploaded image
 def predict_image_class(image, model):
