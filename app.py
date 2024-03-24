@@ -6,7 +6,7 @@ import numpy as np
 import copy
 
 # Load the model
-@st.cache_data()
+@st.cache()
 def load_model():
     model = tf.keras.models.load_model("./model/mobilenetV2/mobilenetv2.h5", compile=False)
     return copy.deepcopy(model)
