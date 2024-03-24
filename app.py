@@ -1,4 +1,3 @@
-
 import streamlit as st
 import tensorflow as tf
 from PIL import Image
@@ -109,10 +108,7 @@ def main():
             st.write('**Prevention:**', disease_data[predicted_class]['prevention'])
             st.write('**Causes:**', disease_data[predicted_class]['causes'])
         else:
-            if predicted_class == 'Healthy':
-                st.success('The uploaded image indicates healthy chicken feces.')
-            else:
-                st.error('Error: The uploaded image does not contain chicken feces.')
+            st.error('Error: Unable to determine the disease class from the uploaded image.')
             st.write('Please upload an image of chicken feces.')
 
 # Run the app below
