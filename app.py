@@ -1,10 +1,11 @@
+
 import streamlit as st
 import tensorflow as tf
 from PIL import Image
 import numpy as np
 
 # Load the model
-@st.cache()
+@st.cache(allow_output_mutation=True)
 def load_model():
     model = tf.keras.models.load_model("./model/mobilenetV2/mobilenetv2.h5", compile=False)
     return model
@@ -107,12 +108,12 @@ def main():
             st.write('**Prevention:**', disease_data[predicted_class]['prevention'])
             st.write('**Causes:**', disease_data[predicted_class]['causes'])
         else:
-            if predicted_class is None:
-                st.warning('The model did not recognize any disease from the uploaded image.')
+            if predicted_class == 'Healthy':
+                st.success('The uploaded image indicates healthy chicken feces.')
             else:
-                st.warning('The uploaded image does not contain chicken feces. Please upload an image of chicken feces.')
+                st.error('Error: The uploaded image does not contain chicken feces.')
+            st.write('Please upload an image of chicken feces.')
 
-# Run the app
+# Run the app below
 if __name__ == '__main__':
     main()
-
