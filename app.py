@@ -4,7 +4,7 @@ from PIL import Image
 import numpy as np
 
 # Load the model
-@st.cache_data()
+@st.cache()
 def load_model():
     model = tf.keras.models.load_model("./model/mobilenetV2/mobilenetv2.h5", compile=False)
     return model
