@@ -2,13 +2,12 @@ import streamlit as st
 import tensorflow as tf
 from PIL import Image
 import numpy as np
-import copy
 
 # Load the model
 @st.cache()
 def load_model():
     model = tf.keras.models.load_model("./model/mobilenetV2/mobilenetv2.h5", compile=False)
-    return copy.deepcopy(model)
+    return model
 
 # Function to make predictions on the uploaded image
 def predict_image_class(image, model):
@@ -20,18 +19,6 @@ def predict_image_class(image, model):
     # Make predictions
     predictions = model.predict(img_array)[0]
     return predictions
-
-# Function to check if the image contains chicken feces
-def is_chicken_feces_image(predictions, threshold=0.5):
-    # Define the classes
-    classes = ['Coccidiosis', 'Healthy', 'NCD', 'Salmonella']
-
-    # Check if any of the predictions indicate a disease
-    for i, prediction in enumerate(predictions):
-        if classes[i] != 'Healthy' and prediction >= threshold:
-            return True, classes[i]
-
-    return False, None
 
 # Define data about diseases
 disease_data = {
@@ -92,25 +79,22 @@ def main():
         # Make predictions on the image
         predictions = predict_image_class(uploaded_image, model)
 
-        # Check if the image contains chicken feces
-        is_feces_image, predicted_class = is_chicken_feces_image(predictions)
+        # Get the predicted class
+        predicted_class_index = np.argmax(predictions)
+        predicted_class = ['Coccidiosis', 'Healthy', 'NCD', 'Salmonella'][predicted_class_index]
 
         # Display the prediction result
-        if is_feces_image:
-            st.success(f'The image is classified as {predicted_class}')
+        st.success(f'The image is classified as {predicted_class}')
 
-            # Display additional information about the disease
-            st.subheader('Additional Information:')
-            st.write('**Medication:**')
-            for medication in disease_data[predicted_class]['medication']:
-                st.write(f"- {medication}")
-            st.write('**Treatment:**', disease_data[predicted_class]['treatment'])
-            st.write('**Prevention:**', disease_data[predicted_class]['prevention'])
-            st.write('**Causes:**', disease_data[predicted_class]['causes'])
-        else:
-            st.error('Error: Unable to determine the disease class from the uploaded image.')
-            st.write('Please upload an image of chicken feces.')
+        # Display additional information about the disease
+        st.subheader('Additional Information:')
+        st.write('**Medication:**')
+        for medication in disease_data[predicted_class]['medication']:
+            st.write(f"- {medication}")
+        st.write('**Treatment:**', disease_data[predicted_class]['treatment'])
+        st.write('**Prevention:**', disease_data[predicted_class]['prevention'])
+        st.write('**Causes:**', disease_data[predicted_class]['causes'])
 
-# Run the app below
+# Run the app
 if __name__ == '__main__':
     main()
